@@ -10,7 +10,7 @@ import { mergeGuestCart } from '../services/cart.service.js';
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 
@@ -24,20 +24,7 @@ export const register = async (req, res, next) => {
     }
 
     const user = await User.create({ name, email, password });
-    const { accessToken, refreshToken } = generateTokenPair(user);
-
-    // Store refresh token in DB
-    await Token.create({
-      user: user._id,
-      token: refreshToken,
-      type: 'refresh',
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      userAgent: req.headers['user-agent'] || '',
-      ipAddress: req.ip || '',
-    });
-
-    res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
-
+    // Do not generate or set tokens on registration to enforce manual login flow
     // Merge guest cart if provided
     if (req.body.guestCart && Array.isArray(req.body.guestCart)) {
       await mergeGuestCart(user._id, req.body.guestCart).catch(() => {});
@@ -46,8 +33,8 @@ export const register = async (req, res, next) => {
     return res.status(201).json(
       new ApiResponse(
         201,
-        { user: user.toJSON(), accessToken },
-        'Registration successful'
+        { user: user.toJSON() },
+        'Registration successful. Please log in.'
       )
     );
   } catch (error) {

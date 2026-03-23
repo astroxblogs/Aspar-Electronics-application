@@ -31,13 +31,9 @@ export const useAuth = () => {
       setLoading(true);
       try {
         const result = await authService.register(data);
-        dispatch(setCredentials({ user: result.data.user, accessToken: result.data.accessToken }));
-        if (result.data.user.wishlist) {
-          dispatch(setWishlist(result.data.user.wishlist.map((p) => p._id || p)));
-        }
-        dispatch(clearGuestCart());
-        toast.success('Registration successful! Welcome to Aspar 🎉');
-        router.push('/');
+        // Do not auto-login; redirect to login page instead
+        toast.success('Registration successful! Please sign in ');
+        router.push('/login');
         return { success: true };
       } catch (error) {
         const message = error?.response?.data?.message || 'Registration failed';
