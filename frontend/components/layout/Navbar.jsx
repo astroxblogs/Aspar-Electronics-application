@@ -37,9 +37,11 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 500);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -161,7 +163,7 @@ export default function Navbar() {
               </button>
 
               {/* User menu */}
-              {isAuthenticated ? (
+              {(mounted && isAuthenticated) ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'transparent', border: 'none', cursor: 'pointer', padding: '0 8px' }}>
@@ -256,7 +258,7 @@ export default function Navbar() {
                   Wishlist ({wishlist.length})
                 </Link>
 
-                {!isAuthenticated && (
+                {(!mounted || !isAuthenticated) && (
                   <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                     <Link href="/login" onClick={() => setMobileMenuOpen(false)} style={{ flex: 1, textAlign: 'center', border: `1px solid ${GOLD}`, color: GOLD, padding: '10px 0', borderRadius: '4px', fontFamily: "'Montserrat', sans-serif", fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                       Log In
