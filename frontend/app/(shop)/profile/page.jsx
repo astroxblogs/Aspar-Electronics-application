@@ -18,6 +18,7 @@ import { selectCurrentUser, selectIsAuthenticated } from '@/store/slices/authSli
 import useAuth from '@/hooks/useAuth';
 import api from '@/services/api';
 import { toast } from 'sonner';
+import AuthGuard from '@/components/auth/AuthGuard';
 
 export default function ProfilePage() {
   const user = useSelector(selectCurrentUser);
@@ -30,8 +31,6 @@ export default function ProfilePage() {
   const [addresses, setAddresses] = useState(user?.addresses || []);
   const [addingAddress, setAddingAddress] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
-
-  useEffect(() => { if (!isAuthenticated) router.push('/login'); }, [isAuthenticated, router]);
 
   const profileForm = useForm({ defaultValues: { name: user?.name || '', phone: user?.phone || '' } });
   const passwordForm = useForm();
@@ -87,8 +86,9 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="container-custom py-10 max-w-3xl">
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">My Profile</h1>
+    <AuthGuard>
+      <div className="container-custom py-10 max-w-3xl">
+        <h1 className="text-2xl font-bold text-slate-900 mb-6">My Profile</h1>
 
       {/* Avatar */}
       <div className="bg-white rounded-xl border p-6 mb-6 flex items-center gap-5">
@@ -209,5 +209,6 @@ export default function ProfilePage() {
         </TabsContent>
       </Tabs>
     </div>
+    </AuthGuard>
   );
 }

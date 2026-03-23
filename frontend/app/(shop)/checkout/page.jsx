@@ -18,6 +18,7 @@ import useCart from '@/hooks/useCart';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/store/slices/authSlice';
 import { toast } from 'sonner';
+import AuthGuard from '@/components/auth/AuthGuard';
 
 const STEPS = ['Address', 'Review', 'Payment'];
 const GOLD = '#b8976a';
@@ -68,9 +69,10 @@ export default function CheckoutPage() {
   const grandTotal = Math.round((total + shippingCost + tax) * 100) / 100;
 
   return (
-    <div style={{ background: '#080808', minHeight: '100vh', paddingTop: '1px' }}>
-      <div className="container-custom py-12 max-w-6xl">
-        <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 300, color: 'white', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: '2rem' }}>
+    <AuthGuard>
+      <div style={{ background: '#080808', minHeight: '100vh', paddingTop: '1px' }}>
+        <div className="container-custom py-12 max-w-6xl">
+          <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 300, color: 'white', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: '2rem' }}>
           Secure Checkout
         </h1>
 
@@ -335,5 +337,6 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+    </AuthGuard>
   );
 }

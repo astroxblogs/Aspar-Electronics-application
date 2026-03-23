@@ -9,6 +9,7 @@ import Pagination from '@/components/shared/Pagination';
 import { orderService } from '@/services/orderService';
 import { formatPrice, formatDate } from '@/lib/formatters';
 import { ORDER_STATUSES } from '@/lib/constants';
+import AuthGuard from '@/components/auth/AuthGuard';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -45,9 +46,10 @@ export default function OrdersPage() {
   }
 
   return (
-    <div style={{ background: '#080808', minHeight: '100vh', paddingTop: '1px' }}>
-      <div className="container-custom py-12 max-w-4xl">
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.5rem', color: 'white', marginBottom: '2rem', letterSpacing: '-0.02em' }}>Past Orders</h1>
+    <AuthGuard>
+      <div style={{ background: '#080808', minHeight: '100vh', paddingTop: '1px' }}>
+        <div className="container-custom py-12 max-w-4xl">
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.5rem', color: 'white', marginBottom: '2rem', letterSpacing: '-0.02em' }}>Past Orders</h1>
         {orders.length === 0 ? (
           <div style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.05)', padding: '4rem 2rem', textAlign: 'center' }}>
             <Package style={{ width: '40px', height: '40px', color: 'rgba(255,255,255,0.2)', margin: '0 auto 1rem' }} />
@@ -93,5 +95,6 @@ export default function OrdersPage() {
         )}
       </div>
     </div>
+    </AuthGuard>
   );
 }
