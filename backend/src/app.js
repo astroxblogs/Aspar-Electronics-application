@@ -40,6 +40,11 @@ app.use(compression());
 // Global Rate Limiter
 app.use(globalRateLimiter);
 
+// Root Welcome Route
+app.get('/', (req, res) => {
+  res.send(' Welcome to the Aspar API! The backend is running successfully.');
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
